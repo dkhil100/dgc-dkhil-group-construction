@@ -70,12 +70,12 @@ export default function Testimonials() {
       id="avis"
       className="py-24 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white overflow-hidden relative transition-colors duration-300"
     >
-      {/* Title section with Repeated Scroll Reveal */}
+      {/* Title section */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.3 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        viewport={{ once: true, amount: 0.05 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
         className="text-center mb-12 px-6"
       >
         <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight transition-colors duration-300">
@@ -86,12 +86,12 @@ export default function Testimonials() {
         </p>
       </motion.div>
 
-      {/* Infinite Scrolling Container with Repeated Scroll Fade-In */}
+      {/* Infinite Scrolling Container */}
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: false, amount: 0.2 }}
-        transition={{ duration: 0.7, delay: 0.1, ease: "easeOut" }}
+        viewport={{ once: true, amount: 0.05 }}
+        transition={{ duration: 0.5, delay: 0.05, ease: "easeOut" }}
         className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
       >
         {/* Row 1: Moves Left */}
