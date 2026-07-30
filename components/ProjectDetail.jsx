@@ -12,6 +12,7 @@ import {
   ChevronRight 
 } from "lucide-react";
 import Navbar from "./Navbar";
+import SpecularButton from "./SpecularButton";
 
 // Animation Variants
 const containerVariants = {
@@ -278,14 +279,27 @@ export default function ProjectDetail({ project, onBack }) {
               </div>
 
               <div className="pt-4 border-t border-slate-800">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                <SpecularButton
                   onClick={handleRequestSimilarProject}
-                  className="w-full py-3 bg-amber-500 text-slate-950 font-bold rounded-lg hover:bg-amber-400 transition-colors text-xs uppercase tracking-wider cursor-pointer shadow-lg shadow-amber-500/10"
+                  size="md"
+                  radius={12}
+                  lineColor="#f59e0b"
+                  baseColor="#0f172a"
+                  tint="#f59e0b"
+                  tintOpacity={0.15}
+                  textColor="#ffffff"
+                  intensity={1.2}
+                  shineSize={15}
+                  shineFade={35}
+                  thickness={1.5}
+                  speed={0.35}
+                  followMouse={true}
+                  proximity={300}
+                  autoAnimate={false}
+                  className="w-full justify-center text-center font-bold text-xs uppercase tracking-wider cursor-pointer"
                 >
                   Demander un Projet Similaire
-                </motion.button>
+                </SpecularButton>
               </div>
             </motion.div>
           </div>

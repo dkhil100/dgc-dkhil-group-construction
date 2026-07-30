@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { PhoneCall, Mail, MapPin } from "lucide-react";
+import SpecularButton from "./SpecularButton";
 
 export default function Appointment() {
   const [formData, setFormData] = useState({
@@ -34,7 +35,6 @@ export default function Appointment() {
       const data = await response.json();
 
       if (response.status === 429) {
-        // Rate limited
         setStatus({ loading: false, success: false, error: data.error });
         return;
       }
@@ -250,13 +250,29 @@ export default function Appointment() {
                 </div>
               )}
 
-              <button
+              {/* SpecularButton - Configured with Hero styling props & submit functionality */}
+              <SpecularButton
                 type="submit"
                 disabled={status.loading}
-                className="w-full py-4 bg-amber-500 text-slate-950 font-bold rounded-lg hover:bg-amber-400 transition-colors uppercase tracking-wider disabled:opacity-50 cursor-pointer text-sm"
+                size="md"
+                radius={12}
+                lineColor="#f59e0b"
+                baseColor="#0f172a"
+                tint="#f59e0b"
+                tintOpacity={0.15}
+                textColor="#ffffff"
+                intensity={1.2}
+                shineSize={15}
+                shineFade={35}
+                thickness={1.5}
+                speed={0.35}
+                followMouse={true}
+                proximity={300}
+                autoAnimate={false}
+                className="w-full justify-center text-center font-semibold text-sm cursor-pointer disabled:opacity-50"
               >
                 {status.loading ? "Envoi en cours..." : "Envoyer ma demande"}
-              </button>
+              </SpecularButton>
             </form>
           </motion.div>
         </div>

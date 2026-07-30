@@ -58,7 +58,7 @@ export default function Hero({ startAnimation = true }) {
       <div className="relative z-20 max-w-7xl mx-auto px-6 py-20 w-full">
         <div className="max-w-2xl space-y-6">
           
-          {/* Badge top - Glisse du HAUT */}
+          {/* Badge top */}
           <motion.div
             initial={{ opacity: 0, y: -25 }}
             animate={startAnimation ? { opacity: 1, y: 0 } : { opacity: 0, y: -25 }}
@@ -69,7 +69,7 @@ export default function Hero({ startAnimation = true }) {
             <span>Excellence en Construction de Premier Ordre</span>
           </motion.div>
 
-          {/* Titre Principal - Glisse de la GAUCHE */}
+          {/* Titre Principal */}
           <div className="overflow-hidden">
             <motion.h1
               initial={{ opacity: 0, x: -50 }}
@@ -89,7 +89,7 @@ export default function Hero({ startAnimation = true }) {
             </motion.h1>
           </div>
 
-          {/* Description - Fade + Soft Slide du BAS */}
+          {/* Description */}
           <motion.p
             initial={{ opacity: 0, y: 25 }}
             animate={startAnimation ? { opacity: 1, y: 0 } : { opacity: 0, y: 25 }}
