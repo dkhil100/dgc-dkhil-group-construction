@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #020617;
+  color: #f8fafc;
+}
+@layer base {
+  /* Hide the default cursor and hand pointer on medium screens and larger */
+  @media (min-width: 768px) {
+    *,
+    *::before,
+    *::after,
+    html,
+    body,
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    [role="button"],
+    .cursor-pointer {
+      cursor: none !important;
+    }
+  }
+}
