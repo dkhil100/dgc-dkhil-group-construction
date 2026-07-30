@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   ArrowLeft, 
@@ -65,6 +65,27 @@ export default function ProjectDetail({ project, onBack }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
+  // Synchronous initial check prevents frame delay flicker
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== "undefined") {
+      return document.documentElement.classList.contains("dark");
+    }
+    return true;
+  });
+
+  // Sync dark mode state to feed the component props directly if needed
+  useEffect(() => {
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains("dark"));
+    };
+    checkDarkMode();
+
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+
+    return () => observer.disconnect();
+  }, []);
+
   const images = project.gallery && project.gallery.length > 0 
     ? project.gallery 
     : [project.image];
@@ -104,7 +125,7 @@ export default function ProjectDetail({ project, onBack }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 overflow-hidden">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 overflow-hidden transition-colors duration-300">
       <Navbar onNavigateHome={onBack} isDetailPage={true} />
 
       <motion.div 
@@ -117,7 +138,7 @@ export default function ProjectDetail({ project, onBack }) {
         <motion.div variants={itemVariants}>
           <button
             onClick={onBack}
-            className="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 text-sm font-semibold mb-8 group cursor-pointer"
+            className="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 text-sm font-semibold mb-8 group cursor-pointer transition-colors duration-300"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1.5 transition-transform duration-300" />
             Retour à tous les projets
@@ -126,17 +147,17 @@ export default function ProjectDetail({ project, onBack }) {
 
         {/* Header Title & Badge */}
         <motion.div variants={itemVariants} className="space-y-3 mb-10">
-          <span className="inline-block text-xs font-bold text-amber-500 uppercase tracking-widest px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20">
+          <span className="inline-block text-xs font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest px-3 py-1 bg-amber-500/10 rounded-full border border-amber-500/20 transition-colors duration-300">
             {project.category}
           </span>
-          <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
+          <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight transition-colors duration-300">
             {project.title}
           </h1>
         </motion.div>
 
         {/* Image Gallery Showcase */}
         <motion.div variants={itemVariants} className="space-y-4">
-          <div className="relative h-[400px] md:h-[550px] w-full rounded-2xl overflow-hidden border border-slate-800 bg-slate-900 group">
+          <div className="relative h-[400px] md:h-[550px] w-full rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 group transition-colors duration-300 shadow-lg">
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
               <motion.img
                 key={currentIndex}
@@ -157,7 +178,7 @@ export default function ProjectDetail({ project, onBack }) {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={handlePrev}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-950/60 hover:bg-amber-500 hover:text-slate-950 text-white backdrop-blur-md border border-slate-700/50 transition-colors opacity-90 group-hover:opacity-100 shadow-lg z-10 cursor-pointer"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-900/60 dark:bg-slate-950/60 hover:bg-amber-500 hover:text-slate-950 text-white backdrop-blur-md border border-white/20 dark:border-slate-700/50 transition-colors opacity-90 group-hover:opacity-100 shadow-lg z-10 cursor-pointer"
                   aria-label="Image précédente"
                 >
                   <ChevronLeft className="w-6 h-6" />
@@ -167,13 +188,13 @@ export default function ProjectDetail({ project, onBack }) {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={handleNext}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-950/60 hover:bg-amber-500 hover:text-slate-950 text-white backdrop-blur-md border border-slate-700/50 transition-colors opacity-90 group-hover:opacity-100 shadow-lg z-10 cursor-pointer"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-slate-900/60 dark:bg-slate-950/60 hover:bg-amber-500 hover:text-slate-950 text-white backdrop-blur-md border border-white/20 dark:border-slate-700/50 transition-colors opacity-90 group-hover:opacity-100 shadow-lg z-10 cursor-pointer"
                   aria-label="Image suivante"
                 >
                   <ChevronRight className="w-6 h-6" />
                 </motion.button>
 
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 bg-slate-950/70 border border-slate-800 rounded-full text-xs text-slate-300 backdrop-blur-md z-10">
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 bg-slate-900/70 dark:bg-slate-950/70 border border-slate-700 dark:border-slate-800 rounded-full text-xs text-slate-100 dark:text-slate-300 backdrop-blur-md z-10 transition-colors duration-300">
                   {currentIndex + 1} / {images.length}
                 </div>
               </>
@@ -192,7 +213,7 @@ export default function ProjectDetail({ project, onBack }) {
                   className={`relative w-28 h-20 rounded-lg overflow-hidden border-2 flex-shrink-0 transition-all cursor-pointer ${
                     currentIndex === i 
                       ? "border-amber-500 ring-2 ring-amber-500/30 opacity-100" 
-                      : "border-slate-800 opacity-60 hover:opacity-100"
+                      : "border-slate-300 dark:border-slate-800 opacity-60 hover:opacity-100"
                   }`}
                 >
                   <img src={imgUrl} alt="Miniature" className="w-full h-full object-cover" />
@@ -204,25 +225,25 @@ export default function ProjectDetail({ project, onBack }) {
 
         {/* Details Grid */}
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Main Info (Overview & Highlights) */}
+          {/* Main Info */}
           <div className="lg:col-span-8 space-y-8">
             <motion.div 
               variants={itemVariants}
               whileHover={{ y: -4 }}
               transition={{ duration: 0.3 }}
-              className="bg-slate-900 border border-slate-800 rounded-2xl p-8 space-y-4 shadow-xl"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 space-y-4 shadow-lg dark:shadow-xl transition-colors duration-300"
             >
-              <h3 className="text-xl font-bold text-white">Présentation du Projet</h3>
-              <p className="text-slate-300 text-base leading-relaxed">{project.overview}</p>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white transition-colors duration-300">Présentation du Projet</h3>
+              <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed transition-colors duration-300">{project.overview}</p>
             </motion.div>
 
             <motion.div 
               variants={itemVariants}
               whileHover={{ y: -4 }}
               transition={{ duration: 0.3 }}
-              className="bg-slate-900 border border-slate-800 rounded-2xl p-8 space-y-4 shadow-xl"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 space-y-4 shadow-lg dark:shadow-xl transition-colors duration-300"
             >
-              <h3 className="text-xl font-bold text-white">Points Forts & Ingénierie</h3>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white transition-colors duration-300">Points Forts & Ingénierie</h3>
               <ul className="space-y-3">
                 {project.highlights?.map((item, index) => (
                   <motion.li 
@@ -230,7 +251,7 @@ export default function ProjectDetail({ project, onBack }) {
                     initial={{ opacity: 0, x: -15 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3 + index * 0.08 }}
-                    className="flex items-start gap-3 text-slate-300 text-sm"
+                    className="flex items-start gap-3 text-slate-600 dark:text-slate-300 text-sm transition-colors duration-300"
                   >
                     <CheckCircle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
                     <span>{item}</span>
@@ -246,48 +267,48 @@ export default function ProjectDetail({ project, onBack }) {
               variants={itemVariants}
               whileHover={{ y: -4 }}
               transition={{ duration: 0.3 }}
-              className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 shadow-xl sticky top-28"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 space-y-6 shadow-lg dark:shadow-xl sticky top-28 transition-colors duration-300"
             >
-              <h3 className="text-lg font-bold text-white border-b border-slate-800 pb-4">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 pb-4 transition-colors duration-300">
                 Fiche Technique du Projet
               </h3>
 
               <div className="space-y-4 text-sm">
-                <div className="flex items-center gap-3 text-slate-300">
+                <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300 transition-colors duration-300">
                   <User className="w-4 h-4 text-amber-500 flex-shrink-0" />
                   <div>
-                    <span className="block text-xs text-slate-500">Maître d'Ouvrage / Client</span>
-                    <span className="font-semibold text-white">{project.client}</span>
+                    <span className="block text-xs text-slate-400 dark:text-slate-500 transition-colors duration-300">Maître d'Ouvrage / Client</span>
+                    <span className="font-semibold text-slate-900 dark:text-white transition-colors duration-300">{project.client}</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 text-slate-300">
+                <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300 transition-colors duration-300">
                   <MapPin className="w-4 h-4 text-amber-500 flex-shrink-0" />
                   <div>
-                    <span className="block text-xs text-slate-500">Localisation</span>
-                    <span className="font-semibold text-white">{project.location}</span>
+                    <span className="block text-xs text-slate-400 dark:text-slate-500 transition-colors duration-300">Localisation</span>
+                    <span className="font-semibold text-slate-900 dark:text-white transition-colors duration-300">{project.location}</span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 text-slate-300">
+                <div className="flex items-center gap-3 text-slate-600 dark:text-slate-300 transition-colors duration-300">
                   <Calendar className="w-4 h-4 text-amber-500 flex-shrink-0" />
                   <div>
-                    <span className="block text-xs text-slate-500">Statut / Durée</span>
-                    <span className="font-semibold text-white">{project.duration}</span>
+                    <span className="block text-xs text-slate-400 dark:text-slate-500 transition-colors duration-300">Statut / Durée</span>
+                    <span className="font-semibold text-slate-900 dark:text-white transition-colors duration-300">{project.duration}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-800">
+              <div className="pt-4 border-t border-slate-200 dark:border-slate-800 transition-colors duration-300">
                 <SpecularButton
                   onClick={handleRequestSimilarProject}
                   size="md"
                   radius={12}
                   lineColor="#f59e0b"
-                  baseColor="#0f172a"
+                  baseColor={isDarkMode ? "#0f172a" : "#f1f5f9"}
+                  textColor={isDarkMode ? "#ffffff" : "#0f172a"}
                   tint="#f59e0b"
                   tintOpacity={0.15}
-                  textColor="#ffffff"
                   intensity={1.2}
                   shineSize={15}
                   shineFade={35}
@@ -296,7 +317,7 @@ export default function ProjectDetail({ project, onBack }) {
                   followMouse={true}
                   proximity={300}
                   autoAnimate={false}
-                  className="w-full justify-center text-center font-bold text-xs uppercase tracking-wider cursor-pointer"
+                  className="w-full justify-center text-center font-bold text-xs uppercase tracking-wider cursor-pointer text-slate-900 dark:text-white [&_*]:!text-slate-900 dark:[&_*]:!text-white transition-colors duration-300"
                 >
                   Demander un Projet Similaire
                 </SpecularButton>

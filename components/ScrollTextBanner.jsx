@@ -15,11 +15,8 @@ export default function ScrollTextBanner({
   text = "DGC CONSTRUCTION • DKHIL GROUP • ",
 }) {
   const containerRef = useRef(null);
-
-  // Motion value for horizontal percentage movement
   const baseX = useMotionValue(0);
 
-  // Track page scroll relative to this component
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
@@ -31,57 +28,39 @@ export default function ScrollTextBanner({
     stiffness: 400,
   });
 
-  // Scale scroll velocity into translation speed
   const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], {
     clamp: false,
   });
 
-  // Wrap translation value so it loops smoothly between 0% and -50%
   const x = useTransform(baseX, (v) => `${((v % 50) + 50) % 50 - 50}%`);
 
-  useAnimationFrame((t, delta) => {
-    // Base speed moving left
+  useAnimationFrame((_, delta) => {
     let moveBy = -0.015 * (delta / 1000) * 100;
-
-    // React to scroll direction and speed
     const factor = velocityFactor.get();
     if (factor !== 0) {
       moveBy += moveBy * factor;
     }
-
     baseX.set(baseX.get() + moveBy);
   });
 
   return (
     <div
       ref={containerRef}
-      className="py-2 md:py-4 bg-slate-950 overflow-hidden select-none"
+      className="py-4 bg-slate-100 dark:bg-slate-950 overflow-hidden select-none border-y border-slate-200 dark:border-slate-900 transition-colors duration-300"
     >
       <div className="flex whitespace-nowrap">
         <motion.div
           style={{ x }}
           className="flex whitespace-nowrap text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter"
         >
-          {/* Repeated to fill the view continuously */}
-          <span className="text-transparent border-text opacity-25 hover:opacity-50 transition-opacity duration-300 pr-4">
+          <span className="text-transparent opacity-40 hover:opacity-80 dark:opacity-30 dark:hover:opacity-60 transition-opacity duration-300 pr-4 [-webkit-text-stroke:1.5px_rgba(217,119,6,0.7)] dark:[-webkit-text-stroke:1.5px_rgba(245,158,11,0.6)] md:[-webkit-text-stroke:2px_rgba(217,119,6,0.8)] md:dark:[-webkit-text-stroke:2px_rgba(245,158,11,0.7)]">
             {text} {text}
           </span>
-          <span className="text-transparent border-text opacity-25 hover:opacity-50 transition-opacity duration-300 pr-4">
+          <span className="text-transparent opacity-40 hover:opacity-80 dark:opacity-30 dark:hover:opacity-60 transition-opacity duration-300 pr-4 [-webkit-text-stroke:1.5px_rgba(217,119,6,0.7)] dark:[-webkit-text-stroke:1.5px_rgba(245,158,11,0.6)] md:[-webkit-text-stroke:2px_rgba(217,119,6,0.8)] md:dark:[-webkit-text-stroke:2px_rgba(245,158,11,0.7)]">
             {text} {text}
           </span>
         </motion.div>
       </div>
-
-      <style jsx>{`
-        .border-text {
-          -webkit-text-stroke: 1.5px rgba(245, 158, 11, 0.6);
-        }
-        @media (min-width: 768px) {
-          .border-text {
-            -webkit-text-stroke: 2px rgba(245, 158, 11, 0.7);
-          }
-        }
-      `}</style>
     </div>
   );
 }

@@ -66,7 +66,9 @@ export default function Home() {
   return (
     <main
       className={`min-h-screen font-sans selection:bg-amber-500 selection:text-slate-950 transition-colors duration-500 ${
-        showSplash ? "bg-slate-100 text-slate-900" : "bg-slate-950 text-slate-100"
+        showSplash
+          ? "bg-slate-100 text-slate-900"
+          : "bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100"
       }`}
     >
       {/* Splash Reveal always runs full animation on reload */}

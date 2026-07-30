@@ -12,7 +12,7 @@ export default function Appointment() {
     phone: "",
     projectType: "Résidentiel",
     message: "",
-    websiteUrl: "", // Invisible honeypot
+    websiteUrl: "",
   });
 
   const [status, setStatus] = useState({ loading: false, success: null, error: "" });
@@ -70,7 +70,7 @@ export default function Appointment() {
   return (
     <section
       id="appointment"
-      className="py-24 bg-slate-900 border-t border-slate-800 scroll-mt-24 text-slate-100"
+      className="py-24 bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 scroll-mt-24 text-slate-900 dark:text-slate-100 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
@@ -83,60 +83,67 @@ export default function Appointment() {
             className="lg:col-span-5 space-y-8"
           >
             <div>
-              <span className="text-xs font-bold text-amber-500 uppercase tracking-widest">
+              <span className="text-xs font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest">
                 Contactez-nous
               </span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-white mt-2">
-                Prendre Rendez-vous / Demande de Devis
-              </h2>
-              <p className="text-slate-400 text-sm mt-4 leading-relaxed">
-                Planifiez une réunion avec nos ingénieurs en chef pour évaluer
-                l'étendue de votre projet, obtenir des estimations
-                architecturales et établir un calendrier de construction.
-              </p>
             </div>
 
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-amber-500">
+                <div className="p-3 bg-white dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-amber-600 dark:text-amber-500 shadow-sm transition-colors duration-300">
                   <PhoneCall className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs text-slate-400 uppercase font-semibold">
+                  <h4 className="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold">
                     Ligne Directe
                   </h4>
-                  <p className="text-white font-bold mt-0.5">
+                  <p className="text-slate-900 dark:text-white font-bold mt-0.5">
                     +216 98 273 737 / 28 639 456
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-amber-500">
+                <div className="p-3 bg-white dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-amber-600 dark:text-amber-500 shadow-sm transition-colors duration-300">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs text-slate-400 uppercase font-semibold">
+                  <h4 className="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold">
                     Demandes par Émail
                   </h4>
-                  <p className="text-white font-bold mt-0.5">
+                  <p className="text-slate-900 dark:text-white font-bold mt-0.5">
                     Info.dgccnstruction@gmail.com
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-amber-500">
+                <div className="p-3 bg-white dark:bg-slate-950 rounded-xl border border-slate-200 dark:border-slate-800 text-amber-600 dark:text-amber-500 shrink-0 shadow-sm transition-colors duration-300">
                   <MapPin className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-xs text-slate-400 uppercase font-semibold">
+                  <h4 className="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold">
                     Siège Social
                   </h4>
-                  <p className="text-white font-bold mt-0.5">
+                  <p className="text-slate-900 dark:text-white font-bold mt-0.5">
                     Bureau de DGC , Bizerte, Tunisie
                   </p>
                 </div>
+              </div>
+
+              {/* Map Container directly under Siège Social */}
+              <div className="w-full h-64 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-xl bg-white dark:bg-slate-950 relative mt-4 transition-colors duration-300">
+                <iframe
+                  title="DGC Bizerte Location"
+                  src="https://maps.google.com/maps?q=37.216722,10.118639+(DGC%20Bizerte)&z=17&ie=UTF8&iwloc=B&output=embed"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  className="brightness-95 contrast-105 dark:brightness-90 dark:contrast-125 dark:grayscale-[0.2]"
+                ></iframe>
               </div>
             </div>
           </motion.div>
@@ -147,10 +154,10 @@ export default function Appointment() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-            className="lg:col-span-7 bg-slate-950 border border-slate-800 rounded-2xl p-8 md:p-10 shadow-2xl"
+            className="lg:col-span-7 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 md:p-10 shadow-xl dark:shadow-2xl transition-colors duration-300"
           >
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Honeypot field - Hidden from human users */}
+              {/* Honeypot field */}
               <div className="hidden" aria-hidden="true">
                 <input
                   type="text"
@@ -164,7 +171,7 @@ export default function Appointment() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase mb-2">
                     Nom Complet *
                   </label>
                   <input
@@ -173,12 +180,12 @@ export default function Appointment() {
                     required
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white focus:border-amber-500 focus:outline-none text-sm"
+                    className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none text-sm transition-colors duration-200"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase mb-2">
                     Email *
                   </label>
                   <input
@@ -187,14 +194,14 @@ export default function Appointment() {
                     required
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white focus:border-amber-500 focus:outline-none text-sm"
+                    className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none text-sm transition-colors duration-200"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase mb-2">
                     Téléphone
                   </label>
                   <input
@@ -202,19 +209,19 @@ export default function Appointment() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white focus:border-amber-500 focus:outline-none text-sm"
+                    className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none text-sm transition-colors duration-200"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
+                  <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase mb-2">
                     Type de Projet
                   </label>
                   <select
                     name="projectType"
                     value={formData.projectType}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white focus:border-amber-500 focus:outline-none text-sm"
+                    className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none text-sm transition-colors duration-200"
                   >
                     <option value="Résidentiel">Résidentiel</option>
                     <option value="Commercial">Commercial</option>
@@ -225,7 +232,7 @@ export default function Appointment() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase mb-2">
+                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 uppercase mb-2">
                   Message / Détails *
                 </label>
                 <textarea
@@ -234,33 +241,32 @@ export default function Appointment() {
                   required
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg bg-slate-900 border border-slate-800 text-white focus:border-amber-500 focus:outline-none text-sm"
+                  className="w-full px-4 py-3 rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 text-slate-900 dark:text-white focus:border-amber-500 dark:focus:border-amber-500 focus:outline-none text-sm transition-colors duration-200"
                 />
               </div>
 
               {status.error && (
-                <div className="p-4 bg-red-500/10 border border-red-500/30 text-red-400 rounded-lg text-sm">
+                <div className="p-4 bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 rounded-lg text-sm">
                   {status.error}
                 </div>
               )}
 
               {status.success && (
-                <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-lg text-sm">
+                <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm">
                   Votre message a été envoyé avec succès ! Nous vous contacterons sous peu.
                 </div>
               )}
 
-              {/* SpecularButton - Configured with Hero styling props & submit functionality */}
               <SpecularButton
                 type="submit"
                 disabled={status.loading}
                 size="md"
                 radius={12}
                 lineColor="#f59e0b"
-                baseColor="#0f172a"
+                baseColor="var(--specular-base-color, #0f172a)"
                 tint="#f59e0b"
                 tintOpacity={0.15}
-                textColor="#ffffff"
+                textColor="currentColor"
                 intensity={1.2}
                 shineSize={15}
                 shineFade={35}
@@ -269,9 +275,11 @@ export default function Appointment() {
                 followMouse={true}
                 proximity={300}
                 autoAnimate={false}
-                className="w-full justify-center text-center font-semibold text-sm cursor-pointer disabled:opacity-50"
+                className="w-full justify-center text-center font-semibold text-sm cursor-pointer disabled:opacity-50 text-black dark:text-white"
               >
-                {status.loading ? "Envoi en cours..." : "Envoyer ma demande"}
+                <span className="text-black dark:text-white font-semibold">
+                  {status.loading ? "Envoi en cours..." : "Envoyer ma demande"}
+                </span>
               </SpecularButton>
             </form>
           </motion.div>
