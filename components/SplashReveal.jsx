@@ -21,51 +21,31 @@ export default function SplashReveal({ onStartCircle, onFinishCircle }) {
   }, [onStartCircle]);
 
   return (
-    <div className="fixed inset-0 z-[9999] pointer-events-none overflow-hidden">
-      {/* 🔮 Soft SVG Iris Mask Overlay */}
-      <svg className="w-full h-full absolute inset-0">
-        <defs>
-          {/* Feather / Blur Filter */}
-          <filter id="soft-edge">
-            <feGaussianBlur stdDeviation="25" />
-          </filter>
-
-          {/* Mask Definition */}
-          <mask id="portal-mask">
-            {/* White background = Visible splash overlay */}
-            <rect width="100%" height="100%" fill="white" />
-            
-            {/* Black animated circle = Cutout hole revealing Hero underneath */}
-            <motion.circle
-              cx="50%"
-              cy="50%"
-              initial={{ r: "0%" }}
-              animate={{ r: startReveal ? "120%" : "0%" }}
-              transition={{
-                duration: 1.4,
-                ease: [0.76, 0, 0.24, 1],
-              }}
-              onAnimationComplete={() => {
-                if (startReveal && onFinishCircle) {
-                  onFinishCircle();
-                }
-              }}
-              fill="black"
-              filter="url(#soft-edge)"
-            />
-          </mask>
-        </defs>
-
-        {/* Solid background panel rendered through the mask */}
-        <rect
-          width="100%"
-          height="100%"
-          className="fill-slate-100"
-          mask="url(#portal-mask)"
-        />
-      </svg>
-
-      {/* Splash Text Content (Fades out when reveal begins) */}
+    <motion.div
+      initial={{
+        WebkitMaskImage: "radial-gradient(circle at center, transparent 0%, black 0%)",
+        maskImage: "radial-gradient(circle at center, transparent 0%, black 0%)",
+      }}
+      animate={{
+        WebkitMaskImage: startReveal
+          ? "radial-gradient(circle at center, transparent 150%, black 170%)"
+          : "radial-gradient(circle at center, transparent 0%, black 0%)",
+        maskImage: startReveal
+          ? "radial-gradient(circle at center, transparent 150%, black 170%)"
+          : "radial-gradient(circle at center, transparent 0%, black 0%)",
+      }}
+      transition={{
+        duration: 1.4,
+        ease: [0.76, 0, 0.24, 1],
+      }}
+      onAnimationComplete={() => {
+        if (startReveal && onFinishCircle) {
+          onFinishCircle();
+        }
+      }}
+      className="fixed inset-0 z-[99999] pointer-events-auto cursor-default overflow-hidden bg-slate-100 flex flex-col items-center justify-center"
+    >
+      {/* Splash Text Content */}
       <motion.div
         animate={{ opacity: startReveal ? 0 : 1 }}
         transition={{ duration: 0.4 }}
@@ -102,6 +82,6 @@ export default function SplashReveal({ onStartCircle, onFinishCircle }) {
           </motion.p>
         </div>
       </motion.div>
-    </div>
+    </motion.div>
   );
 }

@@ -18,9 +18,8 @@ export default function Home() {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [showSplash, setShowSplash] = useState(true);
   const [heroCanAnimate, setHeroCanAnimate] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
 
-  // 1. Sync state with URL params on initial mount
+  // Sync state with URL params on initial mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const urlProjectId = params.get("project");
@@ -31,8 +30,6 @@ export default function Home() {
         setSelectedProjectId(found.id);
       }
     }
-
-    setIsMounted(true);
 
     const handlePopState = () => {
       const currentParams = new URLSearchParams(window.location.search);
@@ -66,11 +63,12 @@ export default function Home() {
     window.history.pushState({ path: newUrl }, "", newUrl);
   };
 
-  // Prevent flash before hydration finishes
-  if (!isMounted) return null;
-
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500 selection:text-slate-950">
+    <main
+      className={`min-h-screen font-sans selection:bg-amber-500 selection:text-slate-950 transition-colors duration-500 ${
+        showSplash ? "bg-slate-100 text-slate-900" : "bg-slate-950 text-slate-100"
+      }`}
+    >
       {/* Splash Reveal always runs full animation on reload */}
       <AnimatePresence>
         {showSplash && (
