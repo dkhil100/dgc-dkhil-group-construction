@@ -7,13 +7,11 @@ export default function Navbar({ onNavigateHome }) {
   const [isOpen, setIsOpen] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
 
-  // Sync state with DOM on mount
   useEffect(() => {
     const isDark = document.documentElement.classList.contains("dark");
     setDarkMode(isDark);
   }, []);
 
-  // Toggle Theme Function
   const toggleTheme = () => {
     if (darkMode) {
       document.documentElement.classList.remove("dark");
@@ -28,23 +26,28 @@ export default function Navbar({ onNavigateHome }) {
 
   const scrollToElementWithRetry = (targetId) => {
     let attempts = 0;
-
     const checkAndScroll = () => {
       const element = document.getElementById(targetId);
       if (element) {
         element.scrollIntoView({ behavior: "smooth", block: "start" });
       } else if (attempts < 20) {
-        // Retry every 50ms while Framer Motion finishes page transition
         attempts++;
         setTimeout(checkAndScroll, 50);
       }
     };
-
     checkAndScroll();
+  };
+
+  const cleanUrlHash = () => {
+    // Prevents mobile browsers from storing #projects in URL bar on refresh
+    if (window.history.pushState) {
+      window.history.pushState(null, "", window.location.pathname);
+    }
   };
 
   const handleLogoClick = (e) => {
     e.preventDefault();
+    cleanUrlHash();
     if (onNavigateHome) onNavigateHome();
     setIsOpen(false);
     scrollToElementWithRetry("hero");
@@ -52,6 +55,7 @@ export default function Navbar({ onNavigateHome }) {
 
   const handleLinkClick = (e, targetId) => {
     e.preventDefault();
+    cleanUrlHash();
     if (onNavigateHome) onNavigateHome();
     setIsOpen(false);
     if (targetId) {
@@ -70,7 +74,6 @@ export default function Navbar({ onNavigateHome }) {
     <header className="fixed top-4 left-0 right-0 z-50 px-4 md:px-8 max-w-6xl mx-auto flex flex-col gap-2">
       <nav className="w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200 dark:border-slate-700/50 rounded-full shadow-xl shadow-slate-900/5 dark:shadow-slate-950/40 transition-all duration-300">
         <div className="px-6 h-16 flex items-center justify-between">
-          {/* Brand Logo */}
           <a
             href="#hero"
             onClick={handleLogoClick}
@@ -83,7 +86,6 @@ export default function Navbar({ onNavigateHome }) {
             />
           </a>
 
-          {/* Desktop Links + Theme Toggle */}
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-700 dark:text-slate-300">
             {navLinks.map((link) => (
               <a
@@ -96,7 +98,6 @@ export default function Navbar({ onNavigateHome }) {
               </a>
             ))}
 
-            {/* Dark/Light Toggle Button */}
             <button
               onClick={toggleTheme}
               className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-amber-500 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all duration-300 focus:outline-none"
@@ -106,7 +107,6 @@ export default function Navbar({ onNavigateHome }) {
             </button>
           </div>
 
-          {/* Mobile Right Controls */}
           <div className="flex items-center gap-2 md:hidden">
             <button
               onClick={toggleTheme}
@@ -127,7 +127,6 @@ export default function Navbar({ onNavigateHome }) {
         </div>
       </nav>
 
-      {/* Mobile Drawer */}
       {isOpen && (
         <div className="md:hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200 dark:border-slate-700/50 rounded-2xl shadow-2xl px-6 py-4 space-y-1 animate-in fade-in slide-in-from-top-4 duration-200">
           {navLinks.map((link) => (

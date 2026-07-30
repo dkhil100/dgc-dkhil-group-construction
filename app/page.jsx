@@ -19,8 +19,16 @@ export default function Home() {
   const [showSplash, setShowSplash] = useState(true);
   const [heroCanAnimate, setHeroCanAnimate] = useState(false);
 
-  // Sync state with URL params on initial mount
+  // Disable automatic scroll restoration & reset scroll to top on reload/mount
   useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
+    // Force viewport to top when refreshing/loading home page
+    window.scrollTo(0, 0);
+
+    // Sync state with URL params on initial mount
     const params = new URLSearchParams(window.location.search);
     const urlProjectId = params.get("project");
 
@@ -29,6 +37,9 @@ export default function Home() {
       if (found) {
         setSelectedProjectId(found.id);
       }
+    } else if (window.location.hash) {
+      // Clean hash if present so mobile doesn't scroll automatically
+      window.history.replaceState(null, "", window.location.pathname);
     }
 
     const handlePopState = () => {
@@ -90,7 +101,11 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: showSplash ? 0.2 : 0 }}
+            transition={{
+              duration: 0.6,
+              ease: [0.22, 1, 0.36, 1],
+              delay: showSplash ? 0.2 : 0,
+            }}
           >
             <ProjectDetail project={selectedProject} onBack={handleBackToHome} />
           </motion.div>
