@@ -61,7 +61,12 @@ const imageVariants = {
   }),
 };
 
-export default function ProjectDetail({ project, onBack }) {
+export default function ProjectDetail({
+  project,
+  onBack,
+  onViewAllProjects,
+  onNavigateSection,
+}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
@@ -105,6 +110,14 @@ export default function ProjectDetail({ project, onBack }) {
     setCurrentIndex(index);
   };
 
+  const handleBackToAllProjects = () => {
+    if (onViewAllProjects) {
+      onViewAllProjects();
+    } else if (onBack) {
+      onBack();
+    }
+  };
+
   const handleRequestSimilarProject = () => {
     if (onBack) {
       onBack();
@@ -126,7 +139,12 @@ export default function ProjectDetail({ project, onBack }) {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 overflow-hidden transition-colors duration-300">
-      <Navbar onNavigateHome={onBack} isDetailPage={true} />
+      <Navbar
+        onNavigateHome={onBack}
+        onNavigateSection={onNavigateSection}
+        onViewAllProjects={onViewAllProjects}
+        isDetailPage={true}
+      />
 
       <motion.div 
         className="pt-28 pb-24 max-w-7xl mx-auto px-6"
@@ -134,16 +152,6 @@ export default function ProjectDetail({ project, onBack }) {
         initial="hidden"
         animate="visible"
       >
-        {/* Back Button */}
-        <motion.div variants={itemVariants}>
-          <button
-            onClick={onBack}
-            className="inline-flex items-center gap-2 text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300 text-sm font-semibold mb-8 group cursor-pointer transition-colors duration-300"
-          >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1.5 transition-transform duration-300" />
-            Retour à tous les projets
-          </button>
-        </motion.div>
 
         {/* Header Title & Badge */}
         <motion.div variants={itemVariants} className="space-y-3 mb-10">

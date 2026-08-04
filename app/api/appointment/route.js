@@ -39,14 +39,17 @@ export async function POST(req) {
       },
     });
 
+    // Target recipient address
+    const recipientEmail = "Info.dgcconstruction@gmail.com";
+
     // 4. Build email contents
     const mailOptions = {
-      from: `"${name}" <${process.env.GMAIL_USER}>`,
-      to: process.env.GMAIL_USER,
+      from: `"${name} (via DGC Form)" <${process.env.GMAIL_USER}>`,
+      to: recipientEmail,
       replyTo: email,
       subject: `[DGC-CONSTRUCTION] Nouvelle Demande: ${name}`,
       html: `
-        <div style="font-family: system-ui, sans-serif; padding: 24px; color: #0f172a; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; rounded-lg: 8px;">
+        <div style="font-family: system-ui, sans-serif; padding: 24px; color: #0f172a; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px;">
           <h2 style="color: #f59e0b; margin-top: 0;">Nouvelle Demande de Rendez-vous / Projet</h2>
           <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;" />
           <p style="margin: 8px 0;"><strong>Nom :</strong> ${name}</p>

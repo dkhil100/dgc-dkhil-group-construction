@@ -87,5 +87,25 @@ export const PROJECTS = [
       "Travaux d'isolation extérieure & enduits de haute précision",
       "Clôture périphérique & intégration des accès sécurisés"
     ]
+  },
+  {
+    id: "villa-moez-bennour",
+    title: "Villa R+1 avec Sous-sol",
+    category: "Résidentiel de Luxe (R+1 + Sous-sol)",
+    image: "/villa-moez-1.png",
+    gallery: [
+      "/villa-moez-1.png",
+      "/villa-moez-2.png"
+    ],
+    location: "Jardins de Carthage, Tunis",
+    duration: "Livré avec succès",
+    overview: "Construction d'une villa résidentielle haut de gamme R+1 comprenant un sous-sol aménagé, un garage sécurisé et une clôture périphérique travaillée. Réalisation complète du gros œuvre, des revêtements de façade texturés et des accès extérieurs.",
+    client: "Mr. Moez Bennour",
+    highlights: [
+      "Structure en béton armé R+1 avec sous-sol technique",
+      "Aménagement de garage et portail automatique",
+      "Revêtement et enduit extérieur de haute finition",
+      "Clôture de propriété et aménagements des accès"
+    ]
   }
 ];

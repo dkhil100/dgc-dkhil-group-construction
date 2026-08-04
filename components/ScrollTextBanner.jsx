@@ -44,9 +44,13 @@ export default function ScrollTextBanner({
   });
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
-      className="py-4 bg-slate-100 dark:bg-slate-950 overflow-hidden select-none border-y border-slate-200 dark:border-slate-900 transition-colors duration-300"
+      initial={{ opacity: 0, scaleY: 0.2, filter: "blur(10px)" }}
+      whileInView={{ opacity: 1, scaleY: 1, filter: "blur(0px)" }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.7, ease: [0.2, 0.65, 0.3, 0.9] }}
+      className="py-4 bg-slate-100 dark:bg-slate-950 overflow-hidden select-none border-y border-slate-200 dark:border-slate-900 transition-colors duration-300 origin-center"
     >
       <div className="flex whitespace-nowrap">
         <motion.div
@@ -61,6 +65,6 @@ export default function ScrollTextBanner({
           </span>
         </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

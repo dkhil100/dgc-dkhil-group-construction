@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { PhoneCall, Mail, MapPin } from "lucide-react";
 import SpecularButton from "./SpecularButton";
 
@@ -16,6 +16,17 @@ export default function Appointment() {
   });
 
   const [status, setStatus] = useState({ loading: false, success: null, error: "" });
+
+  // Auto-dismiss status message after 3 seconds
+  useEffect(() => {
+    if (status.success || status.error) {
+      const timer = setTimeout(() => {
+        setStatus((prev) => ({ ...prev, success: null, error: "" }));
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [status.success, status.error]);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -98,7 +109,7 @@ export default function Appointment() {
                     Ligne Directe
                   </h4>
                   <p className="text-slate-900 dark:text-white font-bold mt-0.5">
-                    +216 98 273 737 / 28 639 456
+                    +216 98 273 737 / 52 911 660
                   </p>
                 </div>
               </div>
@@ -112,7 +123,7 @@ export default function Appointment() {
                     Demandes par Émail
                   </h4>
                   <p className="text-slate-900 dark:text-white font-bold mt-0.5">
-                    Info.dgccnstruction@gmail.com
+                    Info.dgcconstruction@gmail.com
                   </p>
                 </div>
               </div>
@@ -226,7 +237,7 @@ export default function Appointment() {
                     <option value="Résidentiel">Résidentiel</option>
                     <option value="Commercial">Commercial</option>
                     <option value="Rénovation">Rénovation</option>
-                    <option value="Infrastructures">Infrastructures</option>
+                    <option value="Villa">Villa Haut Standing</option>
                   </select>
                 </div>
               </div>
@@ -245,17 +256,32 @@ export default function Appointment() {
                 />
               </div>
 
-              {status.error && (
-                <div className="p-4 bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 rounded-lg text-sm">
-                  {status.error}
-                </div>
-              )}
+              {/* Animated status message with auto-dismiss */}
+              <AnimatePresence mode="wait">
+                {status.error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.25 }}
+                    className="p-4 bg-red-500/10 border border-red-500/30 text-red-600 dark:text-red-400 rounded-lg text-sm"
+                  >
+                    {status.error}
+                  </motion.div>
+                )}
 
-              {status.success && (
-                <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm">
-                  Votre message a été envoyé avec succès ! Nous vous contacterons sous peu.
-                </div>
-              )}
+                {status.success && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.25 }}
+                    className="p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-sm"
+                  >
+                    Votre message a été envoyé avec succès ! Nous vous contacterons sous peu.
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <SpecularButton
                 type="submit"

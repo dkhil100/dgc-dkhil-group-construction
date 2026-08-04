@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
-import Services from "../components/Services";
+import ServicesAndProjects from "../components/ServicesAndProjects";
 import ScrollTextBanner from "../components/ScrollTextBanner";
-import Projects from "../components/Projects";
+import Allprojects from "../components/Allprojects";
 import Testimonials from "../components/Testimonials";
 import Appointment from "../components/Appointment";
 import Footer from "../components/Footer";
@@ -16,8 +16,35 @@ import SplashReveal from "../components/SplashReveal";
 
 export default function Home() {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [showAllProjects, setShowAllProjects] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [heroCanAnimate, setHeroCanAnimate] = useState(false);
+
+  const scrollToSectionWhenReady = (targetId) => {
+    if (!targetId) return;
+
+    // Normalizing section target if coming from legacy route call
+    const actualTarget = targetId === "services" ? "services-projects" : targetId;
+
+    let attempts = 0;
+    const maxAttempts = 60;
+
+    const tryScroll = () => {
+      const element = document.getElementById(actualTarget);
+
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+
+      if (attempts < maxAttempts) {
+        attempts += 1;
+        requestAnimationFrame(tryScroll);
+      }
+    };
+
+    requestAnimationFrame(tryScroll);
+  };
 
   // Disable automatic scroll restoration & reset scroll to top on reload/mount
   useEffect(() => {
@@ -31,8 +58,11 @@ export default function Home() {
     // Sync state with URL params on initial mount
     const params = new URLSearchParams(window.location.search);
     const urlProjectId = params.get("project");
+    const isAllProjects = params.get("view") === "all-projects";
 
-    if (urlProjectId) {
+    if (isAllProjects) {
+      setShowAllProjects(true);
+    } else if (urlProjectId) {
       const found = PROJECTS.find((p) => String(p.id) === String(urlProjectId));
       if (found) {
         setSelectedProjectId(found.id);
@@ -45,6 +75,9 @@ export default function Home() {
     const handlePopState = () => {
       const currentParams = new URLSearchParams(window.location.search);
       const id = currentParams.get("project");
+      const viewingAll = currentParams.get("view") === "all-projects";
+
+      setShowAllProjects(viewingAll);
       if (id) {
         const found = PROJECTS.find((p) => String(p.id) === String(id));
         setSelectedProjectId(found ? found.id : null);
@@ -61,17 +94,47 @@ export default function Home() {
     (p) => String(p.id) === String(selectedProjectId)
   );
 
-  const handleSelectProject = (id) => {
+  // SAFELY EXTRACT ID WHETHER A PRIMITIVE OR AN OBJECT IS PASSED
+  const handleSelectProject = (projectOrId) => {
+    const id = typeof projectOrId === "object" && projectOrId !== null 
+      ? projectOrId.id 
+      : projectOrId;
+
     setSelectedProjectId(id);
+    setShowAllProjects(false);
     const newUrl = `${window.location.pathname}?project=${id}`;
+    window.history.pushState({ path: newUrl }, "", newUrl);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleShowAllProjects = () => {
+    setShowAllProjects(true);
+    setSelectedProjectId(null);
+    const newUrl = `${window.location.pathname}?view=all-projects`;
     window.history.pushState({ path: newUrl }, "", newUrl);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleBackToHome = () => {
     setSelectedProjectId(null);
+    setShowAllProjects(false);
     const newUrl = window.location.pathname;
     window.history.pushState({ path: newUrl }, "", newUrl);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleNavigateToSection = (targetId) => {
+    setSelectedProjectId(null);
+    setShowAllProjects(false);
+    const newUrl = window.location.pathname;
+    window.history.pushState({ path: newUrl }, "", newUrl);
+
+    if (targetId) {
+      scrollToSectionWhenReady(targetId);
+      return;
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -92,7 +155,13 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <Navbar onNavigateHome={handleBackToHome} isDetailPage={!!selectedProjectId} />
+      {!showAllProjects && (
+        <Navbar 
+          onNavigateHome={() => handleNavigateToSection("hero")}
+          onNavigateSection={handleNavigateToSection}
+          onViewAllProjects={handleShowAllProjects} 
+        />
+      )}
 
       <AnimatePresence mode="wait">
         {selectedProject ? (
@@ -107,7 +176,31 @@ export default function Home() {
               delay: showSplash ? 0.2 : 0,
             }}
           >
-            <ProjectDetail project={selectedProject} onBack={handleBackToHome} />
+            <ProjectDetail
+              project={selectedProject}
+              onBack={handleBackToHome}
+              onNavigateSection={handleNavigateToSection}
+            />
+            <Footer />
+          </motion.div>
+        ) : showAllProjects ? (
+          <motion.div
+            key="all-projects-page"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -30 }}
+            transition={{
+              duration: 0.6,
+              ease: [0.22, 1, 0.36, 1],
+              delay: showSplash ? 0.2 : 0,
+            }}
+          >
+            <Allprojects
+              onSelectProject={handleSelectProject}
+              onNavigateHome={() => handleNavigateToSection("hero")}
+              onNavigateSection={handleNavigateToSection}
+              onViewAllProjects={handleShowAllProjects}
+            />
           </motion.div>
         ) : (
           <motion.div
@@ -118,17 +211,20 @@ export default function Home() {
             transition={{ duration: 0.5, ease: "easeOut" }}
           >
             <Hero startAnimation={heroCanAnimate} />
-            <Services />
-            <ScrollTextBanner text="DGC CONSTRUCTION • DKHIL GROUP BTP • " />
-            <Projects onSelectProject={handleSelectProject} />
+            
+            {/* Merged Services and Projects Component */}
+            <ServicesAndProjects 
+              onSelectProject={handleSelectProject}
+              onViewAll={handleShowAllProjects}
+            />
+
             <Testimonials />
             <ScrollTextBanner text="DGC CONSTRUCTION • DKHIL GROUP BTP • " />
             <Appointment />
+            <Footer />
           </motion.div>
         )}
       </AnimatePresence>
-
-      <Footer />
     </main>
   );
 }

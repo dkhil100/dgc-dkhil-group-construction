@@ -23,5 +23,18 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // Custom plugin to hide scrollbars while keeping touch/drag functionality
+    function ({ addUtilities }) {
+      addUtilities({
+        ".scrollbar-none": {
+          "-ms-overflow-style": "none", /* IE and Edge */
+          "scrollbar-width": "none", /* Firefox */
+          "&::-webkit-scrollbar": {
+            display: "none", /* Chrome, Safari, and Opera */
+          },
+        },
+      });
+    },
+  ],
 };

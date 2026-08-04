@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const row1 = [
   {
-    name: "Mounir Ben Ammar",
+    name: "Mme. Feryel Bahri",
     role: "Villa Moderne - Jardins de Carthage",
     avatar: "M",
     color: "bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30",
@@ -18,14 +18,14 @@ const row1 = [
     text: "L'aménagement structurel de notre campus au Lac 2 exigeait un respect strict des normes de sécurité et du calendrier. DGC a livré un chantier irréprochable dans les temps.",
   },
   {
-    name: "Sami Ben Rejeb",
+    name: "Dr Sonia",
     role: "Villa Résidentielle - Ras Jebel",
     avatar: "S",
     color: "bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30",
     text: "Construire en bord de mer à Ras Jebel présentait des défis techniques réels. L'équipe DGC a géré le béton armé et la maçonnerie avec un grand professionalisme.",
   },
   {
-    name: "Mme. Chiraz Karray",
+    name: "Mme. Sonia Bouchrara",
     role: "École Primaire Privée Da Vinci - La Marsa",
     avatar: "C",
     color: "bg-purple-500/10 dark:bg-purple-500/20 text-purple-600 dark:text-purple-400 border-purple-500/30",
@@ -42,27 +42,42 @@ const row2 = [
     text: "Notre second projet d'école à La Soukra en collaboration avec DGC. Confiance totale dans leur savoir-faire en structures R+4 et espaces éducatifs.",
   },
   {
-    name: "Karim Chaabane",
-    role: "Résidence Privée - Jardins de Carthage",
-    avatar: "K",
-    color: "bg-teal-500/10 dark:bg-teal-500/20 text-teal-600 dark:text-teal-400 border-teal-500/30",
-    text: "Superbe coordination entre les ingénieurs et les ouvriers sur notre chantier aux Jardins de Carthage. Transparence complète sur le devis du début à la fin.",
-  },
-  {
-    name: "Ing. Hassen Dakhli",
+    name: "Ing. Hamdi Dkhil",
     role: "Supervision BTP - Projet Lac 2",
     avatar: "H",
     color: "bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30",
     text: "En tant qu'ingénieur conseil, c'est un vrai plaisir de collaborer avec Dkhil Group Construction. Rigueur dans le coffrage et coulage du béton.",
   },
-  {
-    name: "Nadia Triki",
-    role: "Projet Villa - Ras Jebel",
-    avatar: "N",
-    color: "bg-cyan-500/10 dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 border-cyan-500/30",
-    text: "Merci à l'équipe de DGC pour la réalisation de notre résidence de vacances à Ras Jebel. De la fondation aux finitions, tout a été exécuté dans les règles de l'art.",
-  },
 ];
+
+function AnimatedLetterTitle({ text }) {
+  const words = text.split(" ");
+
+  return (
+    <h2 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight flex flex-wrap justify-center gap-x-2 sm:gap-x-3 gap-y-1 my-2">
+      {words.map((word, wordIndex) => (
+        <span key={wordIndex} className="inline-flex overflow-hidden py-1">
+          {word.split("").map((letter, letterIndex) => (
+            <motion.span
+              key={letterIndex}
+              initial={{ opacity: 0, y: 40, filter: "blur(6px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{
+                duration: 0.35,
+                delay: wordIndex * 0.08 + letterIndex * 0.02,
+                ease: [0.2, 0.65, 0.3, 0.9],
+              }}
+              className="inline-block"
+            >
+              {letter}
+            </motion.span>
+          ))}
+        </span>
+      ))}
+    </h2>
+  );
+}
 
 export default function Testimonials() {
   return (
@@ -70,28 +85,27 @@ export default function Testimonials() {
       id="avis"
       className="py-24 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white overflow-hidden relative transition-colors duration-300"
     >
-      {/* Title section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.05 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className="text-center mb-12 px-6"
-      >
-        <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight transition-colors duration-300">
-          Ce que nos clients disent de nous
-        </h2>
-        <p className="text-slate-600 dark:text-slate-400 text-base md:text-lg mt-3 max-w-2xl mx-auto transition-colors duration-300">
+      {/* Title section with proper overflow containment */}
+      <div className="text-center mb-16 px-6 max-w-4xl mx-auto overflow-hidden">
+        <AnimatedLetterTitle text="Ce que nos clients disent de nous" />
+        
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
+          className="text-slate-600 dark:text-slate-400 text-sm sm:text-base md:text-lg mt-4 max-w-2xl mx-auto transition-colors duration-300"
+        >
           Découvrez les retours de nos maîtres d'ouvrage et partenaires sur nos réalisations phares en Tunisie.
-        </p>
-      </motion.div>
+        </motion.p>
+      </div>
 
       {/* Infinite Scrolling Container */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.05 }}
-        transition={{ duration: 0.5, delay: 0.05, ease: "easeOut" }}
+        transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
         className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]"
       >
         {/* Row 1: Moves Left */}
