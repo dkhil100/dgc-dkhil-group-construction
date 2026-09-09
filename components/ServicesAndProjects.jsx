@@ -20,6 +20,8 @@ import {
   MapPin,
   Calendar,
   Sparkles,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 const FALLBACK_PROJECTS = [
@@ -113,53 +115,73 @@ export default function ServicesAndProjects({ onSelectProject }) {
     offset: ["start 80%", "end end"],
   });
 
-  // Header Animation (Services)
+  // Header Animation (Services Desktop)
   const headerOpacity = useTransform(servicesScrollProgress, [0.0, 0.15, 0.85, 0.98], [0, 1, 1, 0]);
   const headerY = useTransform(servicesScrollProgress, [0.0, 0.15, 0.85, 0.98], [50, 0, 0, -40]);
 
-  // Content Grid Animation (Services)
+  // Content Grid Animation (Services Desktop)
   const gridOpacity = useTransform(servicesScrollProgress, [0.08, 0.25, 0.85, 0.98], [0, 1, 1, 0]);
   const gridY = useTransform(servicesScrollProgress, [0.08, 0.25, 0.85, 0.98], [70, 0, 0, -50]);
   const gridScale = useTransform(servicesScrollProgress, [0.08, 0.25, 0.85, 0.98], [0.93, 1, 1, 0.95]);
 
-  // PROJECTS SCROLL PROGRESS
+  // PROJECTS SCROLL PROGRESS (Desktop)
   const { scrollYProgress: projectsScrollProgress } = useScroll({
     target: projectsSectionRef,
     offset: ["start start", "end end"],
   });
 
-  // Title Animation
+  // Title Animation (Desktop)
   const titleX = useTransform(projectsScrollProgress, [0, 0.08, 0.88, 0.96], [80, 0, 0, 80]);
   const titleOpacity = useTransform(projectsScrollProgress, [0, 0.08, 0.88, 0.96], [0, 1, 1, 0]);
 
-  // Info Box Exit Animation
+  // Info Box Exit Animation (Desktop)
   const infoBoxOpacity = useTransform(projectsScrollProgress, [0, 0.88, 0.96], [1, 1, 0]);
   const infoBoxY = useTransform(projectsScrollProgress, [0, 0.88, 0.96], [0, 0, 80]);
 
-  // Services State
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const lastInteractionTime = useRef(0);
+  // Services Carousel State
+  const [activeServiceIndex, setActiveServiceIndex] = useState(0);
+  const [isServicePaused, setIsServicePaused] = useState(false);
+  const lastServiceInteraction = useRef(0);
 
   useEffect(() => {
-    if (isPaused) return;
+    if (isServicePaused) return;
 
     const interval = setInterval(() => {
-      const timeSinceInteraction = Date.now() - lastInteractionTime.current;
-      if (lastInteractionTime.current === 0 || timeSinceInteraction >= 8000) {
-        setActiveIndex((prev) => (prev + 1) % SERVICES.length);
+      const timeSinceInteraction = Date.now() - lastServiceInteraction.current;
+      if (lastServiceInteraction.current === 0 || timeSinceInteraction >= 8000) {
+        setActiveServiceIndex((prev) => (prev + 1) % SERVICES.length);
       }
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [isPaused]);
+  }, [isServicePaused]);
 
-  const handleCardClick = (idx) => {
-    setActiveIndex(idx);
-    lastInteractionTime.current = Date.now();
+  const handleServiceInteraction = (index) => {
+    setActiveServiceIndex(index);
+    lastServiceInteraction.current = Date.now();
   };
 
-  const activeService = SERVICES[activeIndex];
+  // Mobile Projects Carousel State
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+  const lastProjectInteraction = useRef(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const timeSinceInteraction = Date.now() - lastProjectInteraction.current;
+      if (lastProjectInteraction.current === 0 || timeSinceInteraction >= 8000) {
+        setActiveProjectIndex((prev) => (prev + 1) % projectsList.length);
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [projectsList.length]);
+
+  const handleProjectInteraction = (index) => {
+    setActiveProjectIndex(index);
+    lastProjectInteraction.current = Date.now();
+  };
+
+  const activeService = SERVICES[activeServiceIndex];
   const ActiveIcon = activeService.icon;
 
   return (
@@ -167,18 +189,18 @@ export default function ServicesAndProjects({ onSelectProject }) {
       {/* TOP FADE (z-20) */}
       <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-slate-50 via-slate-50/80 dark:from-slate-950 dark:via-slate-950/80 to-transparent pointer-events-none z-20 transition-colors duration-300" />
 
-      {/* 3D LOGO CONTAINER */}
-      <div className="sticky top-0 h-screen w-full pointer-events-none z-0 overflow-hidden -mb-[100vh]">
+      {/* 3D LOGO CONTAINER - Desktop only */}
+      <div className="hidden lg:block sticky top-0 h-screen w-full pointer-events-none z-0 overflow-hidden -mb-[100vh]">
         <motion.div style={{ y: logoYOffset, opacity: logoOpacity }} className="w-full h-full flex items-center justify-center">
           <Logo3DBackground imagePath="/logo.png" scrollProgress={sectionScrollProgress} />
         </motion.div>
       </div>
 
       {/* SECTION 1: SERVICES */}
-      <div ref={servicesSectionRef} className="relative z-30 h-[300vh]">
+      {/* DESKTOP VERSION */}
+      <div ref={servicesSectionRef} className="hidden lg:block relative z-30 h-[300vh]">
         <div className="sticky top-0 h-screen w-full flex flex-col justify-center py-12 px-6 sm:px-12 max-w-7xl mx-auto overflow-hidden">
-          
-          {/* STAGGER STEP 1: HEADER */}
+          {/* HEADER */}
           <motion.div
             style={{
               opacity: headerOpacity,
@@ -195,7 +217,7 @@ export default function ServicesAndProjects({ onSelectProject }) {
             </p>
           </motion.div>
 
-          {/* STAGGER STEP 2: SERVICES CARDS GRID */}
+          {/* SERVICES CARDS GRID */}
           <motion.div
             style={{
               opacity: gridOpacity,
@@ -206,15 +228,15 @@ export default function ServicesAndProjects({ onSelectProject }) {
           >
             <div
               className="lg:col-span-6 relative flex items-center justify-start h-[450px] -ml-12 sm:-ml-24 lg:-ml-32"
-              onMouseEnter={() => setIsPaused(true)}
-              onMouseLeave={() => setIsPaused(false)}
+              onMouseEnter={() => setIsServicePaused(true)}
+              onMouseLeave={() => setIsServicePaused(false)}
             >
               <div className="relative w-full h-full flex items-center">
                 {SERVICES.map((service, idx) => {
                   const Icon = service.icon;
                   const count = SERVICES.length;
 
-                  let offset = (idx - activeIndex + count) % count;
+                  let offset = (idx - activeServiceIndex + count) % count;
                   if (offset > count / 2) offset -= count;
 
                   if (Math.abs(offset) > 2) return null;
@@ -235,7 +257,7 @@ export default function ServicesAndProjects({ onSelectProject }) {
                         opacity: 1 - Math.abs(offset) * 0.28,
                       }}
                       transition={{ type: "spring", stiffness: 120, damping: 20 }}
-                      onClick={() => handleCardClick(idx)}
+                      onClick={() => handleServiceInteraction(idx)}
                       className={`absolute left-0 sm:left-4 cursor-pointer flex items-center gap-4 px-5 py-4 rounded-2xl border backdrop-blur-md transition-colors duration-300 z-20 ${
                         isActive
                           ? "bg-white/95 dark:bg-slate-900/95 border-amber-500 shadow-2xl shadow-amber-500/20 ring-2 ring-amber-500/25"
@@ -267,7 +289,7 @@ export default function ServicesAndProjects({ onSelectProject }) {
             <div className="lg:col-span-6">
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={activeIndex}
+                  key={activeServiceIndex}
                   initial={{ opacity: 0, x: 30, scale: 0.98 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   exit={{ opacity: 0, x: -30, scale: 0.98 }}
@@ -279,7 +301,7 @@ export default function ServicesAndProjects({ onSelectProject }) {
                   <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold uppercase tracking-wider mb-6">
                     <ActiveIcon className="w-4 h-4" />
                     <span>
-                      Service 0{activeIndex + 1} / 0{SERVICES.length}
+                      Service 0{activeServiceIndex + 1} / 0{SERVICES.length}
                     </span>
                   </div>
 
@@ -299,8 +321,107 @@ export default function ServicesAndProjects({ onSelectProject }) {
         </div>
       </div>
 
+      {/* MOBILE VERSION - Services Carousel */}
+      <div className="lg:hidden relative z-30 py-12 px-4">
+        <div className="w-full max-w-lg mx-auto">
+          {/* Header */}
+          <div className="text-center space-y-3 mb-8">
+            <span className="inline-block text-xs font-bold text-amber-600 dark:text-amber-500 uppercase tracking-widest px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+              Notre Expertise
+            </span>
+            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Services & Solutions
+            </h2>
+          </div>
+
+          {/* Full-Width Carousel Area */}
+          <div className="relative">
+            <div className="overflow-hidden w-full rounded-3xl">
+              <motion.div
+                animate={{ x: `-${activeServiceIndex * 100}%` }}
+                transition={{ type: "spring", stiffness: 260, damping: 26 }}
+                className="flex w-full"
+              >
+                {SERVICES.map((service, idx) => {
+                  const Icon = service.icon;
+                  return (
+                    <div
+                      key={idx}
+                      className="w-full flex-shrink-0 px-1 box-border"
+                    >
+                      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl min-h-[320px] flex flex-col justify-between relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+                        
+                        <div>
+                          <div className="flex items-center justify-between mb-6">
+                            <div className="w-14 h-14 rounded-2xl bg-amber-500/10 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                              <Icon className="w-7 h-7" />
+                            </div>
+                            <span className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
+                              0{idx + 1} / 0{SERVICES.length}
+                            </span>
+                          </div>
+
+                          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 leading-snug">
+                            {service.title}
+                          </h3>
+
+                          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                            {service.description}
+                          </p>
+                        </div>
+
+                        <div className="pt-4 border-t border-slate-100 dark:border-slate-800/60 mt-6">
+                          <span className="text-xs font-semibold text-amber-600 dark:text-amber-500">
+                            Excellence DGC Construction
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </motion.div>
+            </div>
+
+            {/* Navigation Arrows */}
+            <button
+              onClick={() => handleServiceInteraction((activeServiceIndex - 1 + SERVICES.length) % SERVICES.length)}
+              aria-label="Previous service"
+              className="absolute -left-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 flex items-center justify-center shadow-lg active:scale-95 transition-all focus:outline-none"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+
+            <button
+              onClick={() => handleServiceInteraction((activeServiceIndex + 1) % SERVICES.length)}
+              aria-label="Next service"
+              className="absolute -right-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 flex items-center justify-center shadow-lg active:scale-95 transition-all focus:outline-none"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Dot Indicators */}
+          <div className="flex justify-center items-center gap-2.5 mt-6">
+            {SERVICES.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleServiceInteraction(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+                className={`h-3 rounded-full transition-all duration-300 ${
+                  idx === activeServiceIndex
+                    ? "w-8 bg-amber-500"
+                    : "w-3 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* SECTION 2: PROJECTS */}
-      <div ref={projectsSectionRef} className="relative z-10 h-[500vh]">
+      {/* DESKTOP VERSION */}
+      <div ref={projectsSectionRef} className="hidden lg:block relative z-10 h-[500vh]">
         {/* BOTTOM FADE OVERLAY: z-20 */}
         <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-slate-50 via-slate-50/90 dark:from-slate-950 dark:via-slate-950/90 to-transparent pointer-events-none z-20 transition-colors duration-300" />
 
@@ -367,6 +488,135 @@ export default function ServicesAndProjects({ onSelectProject }) {
               onSelectProject={onSelectProject}
             />
           </motion.div>
+        </div>
+      </div>
+
+      {/* MOBILE VERSION - Projects Carousel (Clean Image + Info Layout) */}
+      <div className="lg:hidden relative z-30 py-12 px-4">
+        <div className="w-full max-w-lg mx-auto">
+          {/* Header */}
+          <div className="text-center space-y-3 mb-8">
+            <span className="inline-flex items-center gap-1.5 text-amber-600 dark:text-amber-500 font-bold text-xs uppercase tracking-widest px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20">
+              <Sparkles className="w-3.5 h-3.5" />
+              Nos Réalisations
+            </span>
+            <h2 className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Projets Récents
+            </h2>
+          </div>
+
+          {/* Carousel Wrapper */}
+          <div className="relative">
+            <div className="overflow-hidden w-full rounded-3xl">
+              <motion.div
+                animate={{ x: `-${activeProjectIndex * 100}%` }}
+                transition={{ type: "spring", stiffness: 260, damping: 26 }}
+                className="flex w-full"
+              >
+                {projectsList.map((project, idx) => (
+                  <div
+                    key={project.id}
+                    className="w-full flex-shrink-0 px-1 box-border"
+                  >
+                    <div className="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden flex flex-col">
+                      {/* Image Preview Container */}
+                      <div className="relative h-52 sm:h-60 w-full overflow-hidden bg-slate-200 dark:bg-slate-800">
+                        {project.image && (
+                          <Image
+                            src={project.image}
+                            alt={project.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover"
+                          />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+
+                        {/* Top Badges */}
+                        <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold text-slate-950 bg-amber-500 px-3 py-1 rounded-full shadow-md">
+                            0{idx + 1} / 0{projectsList.length}
+                          </span>
+                          <span className="text-xs font-semibold text-white bg-slate-950/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/15">
+                            {project.category}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Content & Metadata Below Image */}
+                      <div className="p-6 space-y-4 flex-grow flex flex-col justify-between">
+                        <div>
+                          <h3
+                            onClick={() => onSelectProject?.(project.id)}
+                            className="text-lg font-bold text-slate-900 dark:text-white hover:text-amber-600 dark:hover:text-amber-500 transition-colors cursor-pointer flex items-center justify-between gap-2 mb-2"
+                          >
+                            <span>{project.title}</span>
+                            <ArrowUpRight className="w-5 h-5 text-amber-600 dark:text-amber-500 shrink-0" />
+                          </h3>
+
+                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed">
+                            {project.overview}
+                          </p>
+                        </div>
+
+                        {/* Location & Duration Footer */}
+                        <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 space-y-2">
+                          <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+                            <MapPin className="w-4 h-4 text-amber-600 dark:text-amber-500 shrink-0" />
+                            <span>{project.location}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+                            <Calendar className="w-4 h-4 text-amber-600 dark:text-amber-500 shrink-0" />
+                            <span>{project.duration}</span>
+                          </div>
+
+                          <button
+                            onClick={() => onSelectProject?.(project.id)}
+                            className="w-full mt-3 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs uppercase tracking-wider transition-colors flex items-center justify-center gap-2 shadow-sm"
+                          >
+                            Découvrir le projet <ArrowUpRight className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+
+            {/* Navigation Arrows */}
+            <button
+              onClick={() => handleProjectInteraction((activeProjectIndex - 1 + projectsList.length) % projectsList.length)}
+              aria-label="Previous project"
+              className="absolute -left-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 flex items-center justify-center shadow-lg active:scale-95 transition-all focus:outline-none"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+
+            <button
+              onClick={() => handleProjectInteraction((activeProjectIndex + 1) % projectsList.length)}
+              aria-label="Next project"
+              className="absolute -right-2 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 flex items-center justify-center shadow-lg active:scale-95 transition-all focus:outline-none"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </div>
+
+          {/* Dot Indicators */}
+          <div className="flex justify-center items-center gap-2.5 mt-6">
+            {projectsList.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleProjectInteraction(idx)}
+                aria-label={`Go to project slide ${idx + 1}`}
+                className={`h-3 rounded-full transition-all duration-300 ${
+                  idx === activeProjectIndex
+                    ? "w-8 bg-amber-500"
+                    : "w-3 bg-slate-300 dark:bg-slate-700 hover:bg-slate-400 dark:hover:bg-slate-600"
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
