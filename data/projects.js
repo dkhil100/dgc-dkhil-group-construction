@@ -4,6 +4,10 @@ export const PROJECTS = [
     title: "École Primaire Privée Da Vinci School",
     category: "Établissement Éducatif (R+2 + Sous-sol)",
     image: "/da-vinci-school.jpeg",
+    gallery: [
+      "/da-vinci-school.jpeg",
+      "/da-vinci-school1.png"
+    ],
     location: "La Marsa, Tunis",
     duration: "Livré avec succès",
     overview: "Construction complète d'un bâtiment d'enseignement privé comprenant un sous-sol technique, un rez-de-chaussée et deux étages (R+2). Réalisation des travaux de gros œuvre, finitions architecturales et aménagements de sécurité adaptés aux normes scolaires.",
@@ -36,6 +40,11 @@ export const PROJECTS = [
     title: "École La Joconde (La Soukra)",
     category: "Établissement Éducatif (R+3)",
     image: "/jaconde-sokra.jpeg",
+    gallery: [
+      "/jaconde-sokra.jpeg",
+      "/jaconde-sokra1.jpeg",
+      "/jaconde-sokra2.jpeg"
+    ],
     location: "La Soukra, Tunis",
     duration: "Livré avec succès",
     overview: "Construction d'un établissement d'enseignement moderne R+3. Le projet intègre des espaces de cours spacieux, des systèmes d'accès sécurisés et des finitions architecturales durables pour accueillir les élèves dans un cadre stimulant.",
@@ -106,6 +115,47 @@ export const PROJECTS = [
       "Aménagement de garage et portail automatique",
       "Revêtement et enduit extérieur de haute finition",
       "Clôture de propriété et aménagements des accès"
+    ]
+  },
+  {
+    id: "immeuble-ain-zaghouan",
+    title: "Immeuble Résidentiel R+2",
+    category: "Résidentiel (R+2)",
+    image: "/Immeuble-ain-zaghouan1.jpeg",
+    gallery: [
+      "/Immeuble-ain-zaghouan1.jpeg",
+      "/Immeuble-ain-zaghouan.jpeg",
+      "/Immeuble-ain-zaghouan2.jpeg",
+      "/Immeuble-ain-zaghouan3.jpeg"
+    ],
+    location: "Aïn Zaghouan, Tunis",
+    duration: "Livré avec succès",
+    overview: "Construction d'un immeuble résidentiel contemporain R+2. L'architecture cubique se distingue par ses teintes bicolores élégantes, ses pergolas en béton en toiture-terrasse et ses menuiseries extérieures modernes adaptées aux contraintes urbaines.",
+    client: "Client Privé",
+    highlights: [
+      "Structure en béton armé R+2",
+      "Façade moderne bicolore avec enduit projeté à haute résistance",
+      "Pergola d'ombrage intégrée en béton en terrasse",
+      "Clôture, garage fermé et sécurisation des accès"
+    ]
+  },
+  {
+    id: "immeuble-el-aouina",
+    title: "Immeuble R+2",
+    category: "Résidentiel & Commercial (R+2)",
+    image: "/Immeuble-al-aouina.jpeg",
+    gallery: [
+      "/Immeuble-al-aouina.jpeg"
+    ],
+    location: "El Aouina, Tunis",
+    duration: "Livré avec succès",
+    overview: "Construction d'un immeuble mixte R+2 situé dans une zone urbaine dynamique[cite: 6]. Le projet comporte des locaux à usage commercial au rez-de-chaussée ainsi que des espaces résidentiels aux étages[cite: 6], complétés par une façade moderne bicolore, une clôture de sécurité et un portail coulissant motorisé[cite: 6].",
+    client: "Client Privé",
+    highlights: [
+      "Structure béton armé R+2 à usage mixte[cite: 6]",
+      "Rez-de-chaussée aménagé pour usage commercial[cite: 6]",
+      "Façade épurée blanc et gris anthracite avec encadrements soulignés[cite: 6]",
+      "Mur d'enceinte, portail d'accès coulissant et sécurisation du site[cite: 6]"
     ]
   }
 ];
